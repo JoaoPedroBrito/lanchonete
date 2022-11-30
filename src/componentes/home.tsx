@@ -1,5 +1,7 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { View, Text, FlatList, Pressable, Alert } from "react-native";
+import { View, Text, FlatList, Pressable, Alert, StyleSheet } from "react-native";
+import { Icon } from "react-native-vector-icons/Icon";
 import { produtos } from "../database/data";
 import { Produto } from "../entidades/produto";
 
@@ -8,15 +10,19 @@ interface ItemLista {
 }
 
 const Item = ({ produto }: ItemLista) => {
+    const navigation = useNavigation();
     return (
         <View>
-            <Text>Nome: {produto.nome}</Text>
-            <Text>Valor: {produto.valor}</Text>
             <Pressable
                 onPress={() => {
-                    Alert.alert(`codigo: ${produto.codigo}`);
+                    navigation.navigate(
+                        'Produto' as never,
+                        { codigo: produto.codigo } as never);
                 }}
-            ><Text>Click</Text></Pressable>
+            >
+                <Text style={styles.Text}>{produto.nome}</Text>
+                <Text style={styles.innertext}>A partir de R${produto.valor} </Text>
+            </Pressable>
         </View>
     )
 }
@@ -24,46 +30,17 @@ const Item = ({ produto }: ItemLista) => {
 
 function fnRenderItem({ item }: any) {
     return (
-        <View>
+        <View style={styles.cards}>
             <Item produto={item}></Item>
-            <Text>----------------------</Text>
         </View>
     )
 }
 
 const Home = () => {
-    // const produto_1 = {
-    //     codigo: 1,
-    //     nome: "Hot-Dog",
-    //     descricao: "Pão e salsicha",
-    //     valor: 7.50,
-    //     categoria: {
-    //         codigo: 1,
-    //         descricao: "Lanche"
-    //     }
-    // };
-
-    // const produto_2 = {
-    //     codigo: 2,
-    //     nome: "Hot-Dogão",
-    //     descricao: "Pão e salsicha e salsicha",
-    //     valor: 10.50,
-    //     categoria: {
-    //         codigo: 1,
-    //         descricao: "Lanche"
-    //     }
-    // };
-
-    // const produtos = [
-    //     produto_1,
-    //     produto_2
-    // ];
-
-    //return (<Item produto={produto_1}></Item>);
     return (
-        <View>
-            <Text style={{ textAlign: "center" }}>
-                Lista de Produto
+        <View style={styles.viewstyle}>
+            <Text style={styles.MainText}>
+                Produtos
             </Text>
             <FlatList
                 data={produtos}
@@ -74,3 +51,43 @@ const Home = () => {
 }
 
 export default Home;
+
+const styles = StyleSheet.create({
+    MainText: {
+        fontSize: 26,
+        fontWeight: "bold",
+        margin: 10,
+        textAlign: "center",
+        color: "black"
+    },
+    Text: {
+        fontSize: 20,
+        fontWeight: "bold",
+        marginBottom: 5,
+        marginLeft: 10,
+        color: "black"
+    },
+    innertext: {
+        fontSize: 18,
+        fontWeight: "bold",
+        marginBottom: 10,
+        marginLeft: 10,
+        color: "#39392d",
+    },
+    viewstyle: {
+        width: '100%',
+        height: '100%',
+        backgroundColor: '#ff611d'
+    },
+    cards: {
+        flex: 0.3,
+        backgroundColor: "#ffb80e",
+        borderWidth: 3,
+        borderTopLeftRadius: 15,
+        borderTopRightRadius: 15,
+        borderBottomRightRadius: 15,
+        borderBottomLeftRadius: 15,
+        margin: 5,
+        borderColor: "#813531"
+    },
+});
